@@ -4,18 +4,18 @@ The objective here is to create a model which will compare two images and see if
 
 The workflow of the model is as follows:
 
-   Input_image            Input_image
-        |                      |
-        |                      |
-        |                      |
-Generate_Features      Generate_Features
-         \                    /
-          \                  /
-           \                /
-            \              /
-          Binary Classification
-            model(Same/Not)
-            
+
+
+Input_image ----- Generate_Features
+                                    \
+                                     \
+                                       Binary Classification
+                                         model(Same/Not)
+                                     /  
+                                    / 
+Input_image ----- Generate_Features
+
+ 
 
 ### Plans
 
