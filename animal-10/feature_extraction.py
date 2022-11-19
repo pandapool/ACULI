@@ -71,7 +71,8 @@ for key, value in dict1.items():
         
 df = pd.DataFrame(zip(list(dict2.keys()),list(dict2.values())) , columns=['path', 'label'])
 logging.info("Dataframe Defined")
-
+if os.path.isdir("csv"):
+    os.mkdir("csv")
 for key, value in model_dict.items():
     dummy = df.copy()
     dummy['embedding'] = 0
