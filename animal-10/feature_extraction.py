@@ -1,9 +1,11 @@
-from torchvision.models import alexnet, vgg11, vgg16, vgg19, resnet18, resnet50, resnet101, resnet152, mobilenet_v2
+from torchvision.models import vgg11, vgg16, vgg19, resnet18, resnet50, resnet101, resnet152
 import os, pickle, torch, cv2
 import pandas as pd
 import numpy as np
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(filename="feature_extraction.log",
+                    filemode='a',
+                    level=logging.INFO)
 device = "cuda"
 
 model_dict = {
@@ -11,11 +13,9 @@ model_dict = {
         "resnet50" : resnet50(pretrained=True),
         "resnet101" : resnet101(pretrained=True),
         "resnet152" : resnet152(pretrained=True),
-        "alexnet" : alexnet(pretrained=True),
         "vgg11" : vgg11(pretrained=True),
         "vgg16" : vgg16(pretrained=True),
         "vgg19" : vgg19(pretrained=True),
-        "mobilenet_v2" : mobilenet_v2(pretrained=True)
              }
 logging.info("Model Dictionary Defined")
 def remove_linear_layer(model_dict):
@@ -43,14 +43,6 @@ def preprocess(img_path, model):
     img.div_(255).sub_(0.5).div_(0.5)
     torch_output = model(img.to(device))
     return torch_output[0, :, 0, 0].cpu().detach().numpy()
-    
-def get_distance(img1_embedding, img2_embedding):
-    
-    num=np.dot(img1_embedding,img2_embedding)
-    distance=[1]-num/(np.linalg.norm(img1_embedding)*np.linalg.norm(img2_embedding))
-    # Checking whether the distance is less than specified threshold
-    return distance
-
 
 main_folder = "animal10/raw-img/"
 animals = os.listdir(main_folder)
@@ -71,7 +63,7 @@ for key, value in dict1.items():
         
 df = pd.DataFrame(zip(list(dict2.keys()),list(dict2.values())) , columns=['path', 'label'])
 logging.info("Dataframe Defined")
-if os.path.isdir("csv"):
+if not os.path.isdir("csv"):
     os.mkdir("csv")
 for key, value in model_dict.items():
     dummy = df.copy()
