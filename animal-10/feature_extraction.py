@@ -3,7 +3,9 @@ import os, pickle, torch, cv2
 import pandas as pd
 import numpy as np
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(filename="feature_extraction.log",
+                    filemode='a',
+                    level=logging.INFO)
 device = "cuda"
 
 model_dict = {
